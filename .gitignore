@@ -1,0 +1,6 @@
+CODE_OF_CONDUCT.md
+SECURITY.md
+node_modules
+package-lock.json
+# dist/ cần có trên repo để GitHub Pages tải được guest.js / admin.js (Pages không chạy npm build)
+public
