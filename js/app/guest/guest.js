@@ -254,19 +254,23 @@ export const guest = (() => {
      */
     const buildGoogleCalendar = () => {
         /**
-         * @param {string} d 
+         * @param {Date} d
          * @returns {string}
          */
-        const formatDate = (d) => (new Date(d.replace(' ', 'T') + ':00Z')).toISOString().replace(/[-:]/g, '').split('.').shift();
+        const formatDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.').shift() + 'Z';
+
+        // Giờ bắt đầu lấy từ data-time trên <body> (cùng mốc với bộ đếm ngược), sự kiện kéo dài 4 tiếng.
+        const start = new Date(document.body.getAttribute('data-time').replace(' ', 'T'));
+        const end = new Date(start.getTime() + 4 * 60 * 60 * 1000);
+        const names = document.querySelector('#home h2')?.textContent?.trim() ?? '';
 
         const url = new URL('https://calendar.google.com/calendar/render');
         const data = new URLSearchParams({
             action: 'TEMPLATE',
-            text: 'Lễ cưới Wahyu & Riski',
-            dates: `${formatDate('2023-03-15 10:00')}/${formatDate('2023-03-15 11:00')}`,
+            text: `Lễ cưới ${names}`.trim(),
+            dates: `${formatDate(start)}/${formatDate(end)}`,
             details: 'Kính mời Quý khách tới dự lễ cưới của chúng em. Xin chân thành cảm ơn tình cảm và lời chúc của Quý khách — đó là niềm vui và vinh dự lớn đối với chúng em.',
-            location: 'RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.',
-            ctz: config.get('tz'),
+            ctz: 'Asia/Ho_Chi_Minh',
         });
 
         url.search = data.toString();
